@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Reseptikokoelma</h1>
+    <h2>Kirjaudu sisään</h2>
+    <form action="/login" method="post">
+      <p>
+        <label for="username">Käyttäjätunnus</label>
+        <input type="text" name="username" id="username"/>
+        <input type="submit" value="Luo käyttäjätunnus"/>
+        {% if error %}
+        <p style="color: red;">Virheellinen käyttäjätunnus</p>
+        {% endif %}
+      </p>
+    </form>
+  </body>
+</html>
