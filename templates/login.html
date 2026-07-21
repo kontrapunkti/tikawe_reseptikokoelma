@@ -3,15 +3,28 @@
   <body>
     <h1>Reseptikokoelma</h1>
     <h2>Kirjaudu sisään</h2>
+    {% if session.username %}
+    <p>
+      Olet kirjautunut nimellä {{ session.username }}
+      <p><a href="/logout">Kirjaudu ulos</a></p>
+    </p>
+    {% else %}
     <form action="/login" method="post">
       <p>
         <label for="username">Käyttäjätunnus</label>
-        <input type="text" name="username" id="username"/>
-        <input type="submit" value="Luo käyttäjätunnus"/>
+        <input type="text" name="username"/>
+      </p>
+      <p>
+        <label for="password">Salasana</label>
+        <input type="password" name="password"/>
+      </p>
+      <p>
+        <input type="submit" value="Kirjaudu sisään"/>
         {% if error %}
-        <p style="color: red;">Virheellinen käyttäjätunnus</p>
+        <p style="color: red;">Virheellinen käyttäjätunnus tai salasana</p>
         {% endif %}
       </p>
+      {% endif %}
     </form>
   </body>
 </html>
