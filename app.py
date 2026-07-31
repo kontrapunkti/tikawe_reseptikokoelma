@@ -86,4 +86,51 @@ def create():
         con.commit()
         con.close()
 
-    return "Tunnus luotu"
+    return """Tunnus luotu <p><a href="/login">Kirjaudu sisään</a></p>"""
+
+@app.route("/user")
+def user_page():
+    if "username" not in session:
+        return redirect("/login")
+    
+    username = session["username"]      
+
+    sql = """
+    SELECT recipes.id, recipes.title
+    FROM recipes, users
+    WHERE recipes.creator_id = users.id
+    AND users.username = ?
+    """
+
+    recipes = db.query(sql, [username])
+    
+    return render_template("user.html",username=username,recipes=recipes)
+
+@app.route("/new_recipe")
+def new_recipe():
+    if "username" not in session:
+        return redirect("/login")
+    
+    return render_template("new_recipe.html")
+
+@app.route("/create_recipe", methods=["POST"])
+def create_recipe():
+    if "username" not in session:
+        return redirect("/login")
+
+    username = session["username"]
+    title = request.form["title"]
+    content = request.form["content"]
+
+    user = db.query("SELECT id FROM users WHERE username = ?",[username])
+    user_id = user[0]["id"]
+
+    con = db.connect()
+    con.execute(
+        "INSERT INTO recipes (creator_id, title, content) VALUES (?, ?, ?)",
+        [user_id, title, content]
+    )
+    con.commit()
+    con.close()
+
+    return redirect("/user")

@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <body>
     <h1>Reseptikokoelma</h1>
     <h2>Luo uusi resepti</h2>
-    
+  <body>
+    <form action="/create_recipe" method="post">
+      <p>
+        Otsikko: <br />
+        <input type="text" name="title" />
+      </p>
+      <p>
+        Resepti:<br />
+        <textarea name="content" rows="5" cols="40"></textarea>
+      </p>
+      <input type="submit" value="Tallenna resepti" />
+    </form>
   </body>
 </html>
