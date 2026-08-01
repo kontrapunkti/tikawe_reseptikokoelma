@@ -5,6 +5,7 @@
 
     <h2>Olet kirjautunut sisään käyttäjätunnuksella</h2>
     <p>{{ username }}</p>
+    <p><a href="/">Etusivu</a></p>
 
     <p>
       <a href="/new_recipe">Luo uusi resepti</a>
@@ -19,11 +20,11 @@
 
         <a href="/recipe/{{ recipe.id }}">Avaa</a>
 
-          <a href="/{{ recipe.id }}">
+          <a href="/edit_recipe/{{ recipe.id }}">
             <button>Muokkaa</button>
           </a>
 
-           <a href ="/{{recipe.id }}">
+           <a href ="delete_recipe/{{recipe.id }}">
             <button>Poista</button>
           </a>
         </div>

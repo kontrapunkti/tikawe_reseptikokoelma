@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <form action="/createdemodata"><button type="submit">Demoaineisto</button></form>
-    <form action="/emptytables"><button type="submit">Tyhjennä data</button></form>
     <h1>Reseptikokoelma</h1>
     <p>Sivua on ladattu {{ visits }} kertaa</p>
     {% if session.username %}
@@ -19,6 +17,7 @@
     <h2>Reseptit tietokannassa</h2>
     {% for recipe in recipes %}
     <h3>{{recipe.title}}</h3>
+    <p>Käyttäjä: <a href="/show_user/{{ recipe.user_id }}">{{recipe.username}}</a></p>
     <p>{{recipe.content}}</p>    
     {% endfor %} 
   </body>

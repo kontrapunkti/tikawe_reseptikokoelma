@@ -17,7 +17,7 @@ def index():
     con.commit()
     result = con.execute("SELECT COUNT(*) FROM visits").fetchone()
     count = result[0]
-    recipes = con.execute("SELECT title, content FROM recipes").fetchall()
+    recipes = con.execute("SELECT R.title, R.content, U.username, U.id AS user_id FROM recipes R LEFT JOIN users U ON U.id = R.creator_id").fetchall()
     con.close()
     return render_template("index.html", visits = count, recipes=recipes)
 
@@ -44,23 +44,6 @@ def login_page():
 @app.route("/logout")
 def logout():
     del session["username"]
-    return redirect("/")
-
-@app.route("/createdemodata")
-def createdemodata():
-    con = db.connect()
-    count = con.execute("SELECT COUNT(*) FROM recipes").fetchone()[0]
-    if count == 0:
-        with open("createdemodata.sql") as f:
-            con.executescript(f.read())
-    con.commit()
-    con.close()
-
-    return redirect("/")
-
-@app.route("/emptytables")
-def emptytables():
-    db.emptytables()
     return redirect("/")
 
 @app.route("/register")
@@ -134,3 +117,122 @@ def create_recipe():
     con.close()
 
     return redirect("/user")
+
+@app.route("/recipe/<int:recipe_id>")
+def show_recipe(recipe_id):
+    recipe = db.query("SELECT id, title, content FROM recipes WHERE id = ?", [recipe_id])
+
+    if len(recipe) == 0:
+        return "Reseptiä ei löytynyt"
+
+    return render_template("recipe.html",recipe=recipe[0])
+
+@app.route("/edit_recipe/<int:recipe_id>")
+def edit_recipe(recipe_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    username = session["username"]
+
+    recipe = db.query(
+        """
+        SELECT recipes.id, recipes.title, recipes.content
+        FROM recipes, users
+        WHERE recipes.creator_id = users.id
+        AND users.username = ?
+        AND recipes.id = ?
+        """,
+    [username, recipe_id])
+
+    if len(recipe) == 0:
+        return "Ei käyttöoikeutta tähän reseptiin"
+
+    return render_template("edit_recipe.html",recipe=recipe[0])
+
+@app.route("/update_recipe/<int:recipe_id>", methods=["POST"])
+def update_recipe(recipe_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    username = session["username"]
+
+    recipe = db.query("""
+        SELECT recipes.id
+        FROM recipes, users
+        WHERE recipes.creator_id = users.id
+        AND users.username = ?
+        AND recipes.id = ?
+    """, [username, recipe_id])
+
+    if len(recipe) == 0:
+        return "Ei käyttöoikeutta tähän reseptiin"
+
+    title = request.form["title"]
+    content = request.form["content"]
+
+    con = db.connect()
+
+    con.execute("""
+        UPDATE recipes
+        SET title = ?, content = ?
+        WHERE id = ?
+    """, [title, content, recipe_id])
+
+    con.commit()
+    con.close()
+
+    return redirect("/user")
+
+@app.route("/delete_recipe/<int:recipe_id>")
+def delete_recipe(recipe_id):
+    if "username" not in session:
+        return redirect("/login")
+
+    username = session["username"]
+
+    recipe = db.query("""
+        SELECT recipes.id
+        FROM recipes, users
+        WHERE recipes.creator_id = users.id
+        AND users.username = ?
+        AND recipes.id = ?
+    """, [username, recipe_id])
+
+    if len(recipe) == 0:
+        return "Ei käyttöoikeutta"
+
+    con = db.connect()
+
+    con.execute(
+        "DELETE FROM recipes WHERE id = ?",
+        [recipe_id]
+    )
+
+    con.commit()
+    con.close()
+
+    return redirect("/user")
+
+@app.route("/show_user/<int:user_id>")
+def show_user(user_id):
+
+    recipes = db.query("""
+        SELECT id, title
+        FROM recipes
+        WHERE creator_id = ?
+    """, [user_id])
+
+    user = db.query("""
+        SELECT username
+        FROM users
+        WHERE id = ?
+    """, [user_id])
+
+    if len(user) == 0:
+        return "Käyttäjää ei löytynyt"
+
+    return render_template(
+        "show_user.html",
+        recipes=recipes,
+        user=user[0]
+    )

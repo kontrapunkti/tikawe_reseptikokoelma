@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Muokkaa reseptiä</h1>
+
+<form action="/update_recipe/{{ recipe.id }}" method="post">
+    <p>
+        Otsikko:<br>
+        <input type="text" name="title" value="{{ recipe.title }}">
+    </p>
+
+    <p>
+        Resepti:<br>
+        <textarea name="content" rows="5" cols="40">{{ recipe.content }}</textarea>
+    </p>
+
+    <input type="submit" value="Tallenna muutokset">
+
+</form>
+
+</body>
+</html>
