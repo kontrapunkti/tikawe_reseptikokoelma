@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Etsi reseptejä</h1>
+    <p><a href="/">Etusivu</a></p>
+     <form action="/search" method="post">
+      <p>
+        Hakusana: <br />
+        <input type="text" name="query" />
+      </p>
+      <input type="submit" value="Hae" />
+    </form>
+    <p>Käytä yllä olevaa hakukenttää. Tässä vaiheessa haku toimii vain otsikkokentästä.</p>
+    <h2>Hakutulokset</h2>
+    {% if recipes %}
+      {% for recipe in recipes %}
+        <div>
+          <h3>{{ recipe.title }}</h3>
+
+        <a href="/recipe/{{ recipe.id }}">Avaa</a>
+        </div>
+        <hr>
+      {% endfor %}      
+    {% endif %}
+  </body>
+</html>

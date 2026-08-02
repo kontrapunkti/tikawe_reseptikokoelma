@@ -6,6 +6,7 @@
     {% if session.username %}
     <p>
       Olet kirjautunut nimellä {{ session.username }}
+      <p><a href="/">Etusivu</a></p>
       <p><a href="/logout">Kirjaudu ulos</a></p>
     </p>
     {% else %}

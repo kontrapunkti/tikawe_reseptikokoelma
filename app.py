@@ -236,3 +236,19 @@ def show_user(user_id):
         recipes=recipes,
         user=user[0]
     )
+
+@app.route("/search")
+def search():
+    return render_template("search.html")
+
+
+@app.route("/search", methods=["POST"])
+def search_results():
+    query = request.form["query"]
+    query = f'%{query}%'
+    recipes = db.query("""
+        SELECT id, title
+        FROM recipes
+        WHERE title LIKE ?
+    """, [query])
+    return render_template("search.html", recipes=recipes)
