@@ -5,7 +5,7 @@ import sqlite3
 import config
 
 import db
-db.init_db()
+#db.init_db()
 
 app = Flask(__name__)
 app.secret_key = config.secret_key

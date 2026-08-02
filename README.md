@@ -25,16 +25,15 @@ Tämä projekti on suoraan kurssimateriaalin ehdotuksista
 ```
 pip install flask
 ```
- 
-## Käynnistys
- 
+
+Luo tietokannan taulut ja lisää alkutiedot:
+
+```
+$ sqlite3 database.db < schema.sql
+```
+
 Käynnistä sovellus:
  
 ```
 flask run
 ```
- 
-Sovellus luo SQLite-tietokannan ja tarvittavat taulut automaattisesti ensimmäisellä käynnistyskerralla.
-
-## Huomio tietokannasta
-Kehitysvaiheessa tietokanta alustetaan uudelleen aina sovelluksen käynnistyessä, jolloin kaikki aiemmin tallennettu data poistuu. Tietokanta tyhjenee siis jokaisella käynnistyskerralla.
