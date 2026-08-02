@@ -37,4 +37,4 @@ flask run
 Sovellus luo SQLite-tietokannan ja tarvittavat taulut automaattisesti ensimmäisellä käynnistyskerralla.
 
 ## Huomio tietokannasta
-Tietokanta alustetaan uudelleen aina sovelluksen käynnistyessä, jolloin kaikki aiemmin tallennettu data poistuu. Tietokanta tyhjenee siis jokaisella käynnistyskerralla.
+Kehitysvaiheessa tietokanta alustetaan uudelleen aina sovelluksen käynnistyessä, jolloin kaikki aiemmin tallennettu data poistuu. Tietokanta tyhjenee siis jokaisella käynnistyskerralla.
