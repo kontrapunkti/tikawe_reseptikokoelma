@@ -1,40 +1,40 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <h1>Reseptikokoelma</h1>
+{% extends "layout.html" %}
 
-    <h2>Olet kirjautunut sisään käyttäjätunnuksella</h2>
-    <p>{{ username }}</p>
-    <p><a href="/">Etusivu</a></p>
+{% block title %}Reseptikokoelma{% endblock %}
 
-    <p>
-      <a href="/new_recipe">Luo uusi resepti</a>
-    </p>
+{% block content %}
+<h1>Reseptikokoelma</h1>
 
-    <h2>Omat reseptit</h2>
+<h2>Olet kirjautunut sisään käyttäjätunnuksella</h2>
+<p>{{ username }}</p>
+<p><a href="/">Etusivu</a></p>
 
-    {% if recipes %}
-      {% for recipe in recipes %}
-        <div>
-          <h3>{{ recipe.title }}</h3>
+<p>
+  <a href="/new_recipe">Luo uusi resepti</a>
+</p>
 
-        <a href="/recipe/{{ recipe.id }}">Avaa</a>
+<h2>Omat reseptit</h2>
 
-          <a href="/edit_recipe/{{ recipe.id }}">
-            <button>Muokkaa</button>
-          </a>
+{% if recipes %}
+  {% for recipe in recipes %}
+    <div>
+      <h3>{{ recipe.title }}</h3>
 
-           <a href ="delete_recipe/{{recipe.id }}">
-            <button>Poista</button>
-          </a>
-        </div>
-        <hr>
-      {% endfor %}
-    {% else %}
-      <p>Et ole vielä luonut reseptejä.</p>
-    {% endif %}
+    <a href="/recipe/{{ recipe.id }}">Avaa</a>
 
-    <p><a href="/logout">Kirjaudu ulos</a></p>
+      <a href="/edit_recipe/{{ recipe.id }}">
+        <button>Muokkaa</button>
+      </a>
 
-  </body>
-</html>
+        <a href ="delete_recipe/{{recipe.id }}">
+        <button>Poista</button>
+      </a>
+    </div>
+    <hr>
+  {% endfor %}
+{% else %}
+  <p>Et ole vielä luonut reseptejä.</p>
+{% endif %}
+
+<p><a href="/logout">Kirjaudu ulos</a></p>
+{% endblock %}

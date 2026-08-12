@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <p>Tunnus luotu</p>
-    <p>
-      Olet kirjautunut nimellä {{ session.username }}
-      <p><a href="/logout">Kirjaudu ulos</a></p>
-    </p>
-    <p><a href="/">Aloitussivu</a></p>
-    {% endif %}
-  </body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Reseptikokoelma{% endblock %}
+
+{% block content %}
+<p>Tunnus luotu onnistuneesti</p>
+<p><a href="/login">Kirjaudu sisään</a></p>
+{% endblock %}

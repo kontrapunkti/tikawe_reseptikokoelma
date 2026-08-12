@@ -25,15 +25,17 @@ def index():
 def login():
     username = request.form["username"]
     password = request.form["password"]
-    sql = "SELECT password_hash FROM users WHERE username = ?"
+    sql = "SELECT id, password_hash FROM users WHERE username = ?"
     result = db.query(sql, [username])
     if len(result)==0:
         return render_template("login.html", error=True)
     else:
-        pw_hash = result[0][0]
+        user_id = result[0]["id"]
+        pw_hash = result[0]["password_hash"]
     if username and check_password_hash(pw_hash, password):
         session["username"] = username
-        return render_template("user.html", username=username)
+        session["user_id"] = user_id
+        return redirect("/user")
     else:
         return render_template("login.html", error=True)
 
@@ -58,6 +60,8 @@ def create():
     password2 = request.form["password2"]
     if password1 != password2:
         return render_template("registererror.html", error = "Salasanat eivät vastanneet toisiaan")
+    if username == "" or password1 == "":
+        return render_template("registererror.html", error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
     password_hash = generate_password_hash(password1)
 
     try:
@@ -69,7 +73,7 @@ def create():
         con.commit()
         con.close()
 
-    return """Tunnus luotu <p><a href="/login">Kirjaudu sisään</a></p>"""
+    return render_template("login_successful.html")
 
 @app.route("/user")
 def user_page():
@@ -120,7 +124,9 @@ def create_recipe():
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
-    recipe = db.query("SELECT id, title, content FROM recipes WHERE id = ?", [recipe_id])
+    recipe = db.query("""
+    SELECT R.id, R.creator_id, R.title, R.content, U.username
+    FROM recipes R LEFT JOIN users U ON U.id = R.creator_id WHERE R.id = ?""", [recipe_id])
 
     if len(recipe) == 0:
         return "Reseptiä ei löytynyt"
@@ -145,7 +151,7 @@ def edit_recipe(recipe_id):
     [username, recipe_id])
 
     if len(recipe) == 0:
-        return "Ei käyttöoikeutta tähän reseptiin"
+        return render_template("error.html", error = "Ei käyttöoikeutta tähän reseptiin")
 
     return render_template("edit_recipe.html",recipe=recipe[0])
 

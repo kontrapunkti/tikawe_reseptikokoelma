@@ -1,31 +1,31 @@
-<!DOCTYPE html>
-<html>
-  <body>
-    <h1>Reseptikokoelma</h1>
-    <h2>Kirjaudu sisään</h2>
-    {% if session.username %}
-    <p>
-      Olet kirjautunut nimellä {{ session.username }}
-      <p><a href="/">Etusivu</a></p>
-      <p><a href="/logout">Kirjaudu ulos</a></p>
-    </p>
-    {% else %}
-    <form action="/login" method="post">
-      <p>
-        <label for="username">Käyttäjätunnus</label>
-        <input type="text" name="username"/>
-      </p>
-      <p>
-        <label for="password">Salasana</label>
-        <input type="password" name="password"/>
-      </p>
-      <p>
-        <input type="submit" value="Kirjaudu sisään"/>
-        {% if error %}
-        <p style="color: red;">Virheellinen käyttäjätunnus tai salasana</p>
-        {% endif %}
-      </p>
-      {% endif %}
-    </form>
-  </body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Reseptikokoelma{% endblock %}
+
+{% block content %}
+<h2>Kirjaudu sisään</h2>
+{% if session.username %}
+<p>
+  Olet kirjautunut nimellä {{ session.username }}
+  <p><a href="/">Etusivu</a></p>
+  <p><a href="/logout">Kirjaudu ulos</a></p>
+</p>
+{% else %}
+<form action="/login" method="post">
+  <p>
+    <label for="username">Käyttäjätunnus</label>
+    <input type="text" name="username"/>
+  </p>
+  <p>
+    <label for="password">Salasana</label>
+    <input type="password" name="password"/>
+  </p>
+  <p>
+    <input type="submit" value="Kirjaudu sisään"/>
+    {% if error %}
+    <p style="color: red;">Virheellinen käyttäjätunnus tai salasana</p>
+    {% endif %}
+  </p>
+  {% endif %}
+</form>
+{% endblock %}

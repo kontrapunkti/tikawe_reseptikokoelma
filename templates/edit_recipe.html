@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html>
-<body>
+{% extends "layout.html" %}
 
+{% block title %}Reseptikokoelma{% endblock %}
+
+{% block content %}
 <h1>Muokkaa reseptiä</h1>
 
 <form action="/update_recipe/{{ recipe.id }}" method="post">
@@ -18,6 +19,4 @@
     <input type="submit" value="Tallenna muutokset">
 
 </form>
-
-</body>
-</html>
+{% endblock %}

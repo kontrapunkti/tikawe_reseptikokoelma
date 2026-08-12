@@ -7,15 +7,15 @@ CREATE TABLE visits (
     visited_at TEXT
 );
 
+CREATE TABLE users(
+    id INTEGER PRIMARY KEY,
+    username TEXT UNIQUE,
+    password_hash TEXT
+);
+
 CREATE TABLE recipes(
     id INTEGER PRIMARY KEY,
     creator_id INTEGER REFERENCES users,
     title TEXT,
     content TEXT
-);
-
-CREATE TABLE users(
-    id INTEGER PRIMARY KEY,
-    username TEXT UNIQUE,
-    password_hash TEXT
 );
