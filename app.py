@@ -1,9 +1,8 @@
 from flask import Flask
 from flask import render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
 import config
-import recipes, users, demodata
+import recipes, users
 
 import db
 db.init_db()
@@ -20,7 +19,6 @@ def index():
 def login():
     username = request.form["username"]
     password = request.form["password"]
-    sql = "SELECT id, password_hash FROM users WHERE username = ?"
     result = users.get_user_and_pwhash_by_username(username)
     if len(result)==0:
         return render_template("login.html", error=True)
@@ -83,7 +81,12 @@ def create_recipe():
         return redirect("/login")
     title = request.form["title"]
     content = request.form["content"]
-    recipes.create_recipe(session["user_id"], title, content)
+    categories = request.form.getlist("categories")
+    if title == "":
+        return render_template("registererror.html", error = "Otsikko ei voi olla tyhjä")
+    if content == "":
+        return render_template("registererror.html", error = "Respeti ei voi olla tyhjä")
+    recipes.create_recipe(session["user_id"], title, content, categories)
 
     return redirect("/user")
 
@@ -99,17 +102,19 @@ def edit_recipe(recipe_id):
     if "user_id" not in session:
         return redirect("/login")
     recipe = recipes.get_recipe_for_edit(session["user_id"], recipe_id)
+    categories = recipes.get_categories_by_recipe_id(recipe_id)
     if not recipe:
         return render_template("error.html", error = "Ei käyttöoikeutta tähän reseptiin")
-    return render_template("edit_recipe.html",recipe=recipe)
+    return render_template("edit_recipe.html",recipe=recipe, categories=categories)
 
 @app.route("/update_recipe/<int:recipe_id>", methods=["POST"])
 def update_recipe(recipe_id):
     if "user_id" not in session:
         return redirect("/login")
+    categories = request.form.getlist("categories")
     title = request.form["title"]
     content = request.form["content"]
-    if not recipes.edit_recipe(session["user_id"], recipe_id, title, content):
+    if not recipes.edit_recipe(session["user_id"], recipe_id, title, content, categories):
         return render_template("error.html", error = "Virhe päivityksessä, ei käyttöoikeutta reseptiin tai muu tekninen virhe. Tarkista kirjautuminen ja kokeile uudestaan.")
 
     return redirect("/user")

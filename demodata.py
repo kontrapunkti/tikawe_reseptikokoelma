@@ -4,13 +4,12 @@ from datetime import datetime, timedelta
 import db
 from werkzeug.security import generate_password_hash
 
-
 con = db.connect()
 con.execute("DELETE FROM recipes")
 con.execute("DELETE FROM users")
 
 usernames = [
-    "konsta",
+    "kalle",
     "maija",
     "pekka",
     "matti",

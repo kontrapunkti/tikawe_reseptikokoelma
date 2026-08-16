@@ -15,8 +15,20 @@
         Resepti:<br>
         <textarea name="content" rows="5" cols="40">{{ recipe.content }}</textarea>
     </p>
+    <p>
+        Kategoriat:
+    </p>
+        <input type="checkbox" name="categories" value="1" {% if 1 in categories %} checked {% endif %}>
+        <label>Gluteeniton</label><br>
+        <input type="checkbox" name="categories" value="2" {% if 2 in categories %} checked {% endif %}>
+        <label>Laktoositon</label><br>
+        <input type="checkbox" name="categories" value="3" {% if 3 in categories %} checked {% endif %}>
+        <label>Vähälaktoosinen</label><br>
+        <input type="checkbox" name="categories" value="4" {% if 4 in categories %} checked {% endif %}>
+        <label>Vegaaninen</label><br>
 
-    <input type="submit" value="Tallenna muutokset">
+
+        <input type="submit" value="Tallenna muutokset">
 
 </form>
 {% endblock %}

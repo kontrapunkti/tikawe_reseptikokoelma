@@ -10,10 +10,12 @@ def get_user_recipes(user_id):
 
     return db.query(sql, [user_id])
 
-def create_recipe(creator_id, title, content):
+def create_recipe(creator_id, title, content, categories):
     con = db.connect()
-    con.execute("INSERT INTO recipes (creator_id, title, content) VALUES (?, ?, ?)",
-        [creator_id, title.title(), content])
+    cursor = con.execute("INSERT INTO recipes (creator_id, title, content) VALUES (?, ?, ?)", [creator_id, title.title(), content])
+    if categories:
+        for category_id in categories:
+            con.execute("INSERT INTO recipe_categories (recipe_id, category_id) VALUES (?, ?)", [cursor.lastrowid, category_id])
     con.commit()
     con.close()
 
@@ -41,7 +43,7 @@ def get_recipe_for_edit(user_id, recipe_id):
 
     return result[0]
 
-def edit_recipe(user_id, recipe_id, title, content):
+def edit_recipe(user_id, recipe_id, title, content, categories):
     result = db.query("""
             SELECT id
             FROM recipes
@@ -57,6 +59,9 @@ def edit_recipe(user_id, recipe_id, title, content):
     SET title = ?, content = ?, edited_at = CURRENT_TIMESTAMP
     WHERE id = ?"""
     con.execute(sql, [title.title(), content, recipe_id])
+    con.execute("DELETE FROM recipe_categories WHERE recipe_id = ?", [recipe_id])
+    for category_id in categories:
+        con.execute("INSERT INTO recipe_categories (recipe_id, category_id) VALUES (?, ?)", [recipe_id, category_id])
     con.commit()
     con.close()
     return True
@@ -72,6 +77,7 @@ def delete_recipe(user_id, recipe_id):
         return False
     con = db.connect()
     con.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
+    con.execute("DELETE FROM recipe_categories WHERE recipe_id = ?", [recipe_id])
     con.commit()
     con.close()
     return True
@@ -90,3 +96,16 @@ def get_recent_recipes(count):
         ORDER BY created_at DESC
         LIMIT ?
         """, [count])
+
+def get_categories_by_recipe_id(recipe_id):
+    result = db.query("""
+        SELECT category_id
+        FROM recipe_categories
+        WHERE recipe_id = ?""", [recipe_id])
+    print(result)
+    ids = []
+    
+    for cat_id in result:
+        ids.append(cat_id["category_id"])
+    print(ids)
+    return ids

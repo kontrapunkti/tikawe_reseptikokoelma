@@ -38,6 +38,14 @@ Jos haluat luoda demoaineiston, aja seuraava komento
 $ python3 demodata.py
 ```
 
+Demoaineistossa on 10 käyttäjää, joiden kaikkien salasana on "salasana". Jokaiselle on luotu eri määrä reseptejä.
+
+```
+usernames = ["kalle", "maija",, "pekka", "matti", "liisa", "anna", "jari", "minna", "teemu", "sara"]
+```
+
+## Sovelluksen käynnistäminen
+
 Käynnistä sovellus:
  
 ```
