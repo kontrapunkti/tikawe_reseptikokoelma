@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS ratings(
     id INTEGER PRIMARY KEY,
     recipe_id INTEGER REFERENCES recipes,
     user_id INTEGER REFERENCES users,
-    rate INTEGER
+    rate INTEGER,
+    UNIQUE(recipe_id, user_id)
 );
 
 INSERT INTO categories(name) VALUES("Gluteeniton");

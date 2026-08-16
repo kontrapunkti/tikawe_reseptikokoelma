@@ -67,7 +67,7 @@ def user_page():
     username = session["username"]
     user_id = session["user_id"]
     user_recipes = recipes.get_user_recipes(user_id)
-    return render_template("user.html",username=username,recipes=user_recipes)
+    return render_template("user.html",username=username,recipes=user_recipes,recipe_count=len(user_recipes))
 
 @app.route("/new_recipe")
 def new_recipe():
@@ -93,16 +93,20 @@ def create_recipe():
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = recipes.get_recipe_by_id(recipe_id)
+    categories = recipes.get_categorynames_by_recipe_id(recipe_id)
+    editable = False
+    if "user_id" in session:
+        editable = (session["user_id"] == recipe["creator_id"])
     if not recipe:
         return render_template("error.html", error="Reseptiä ei löytynyt")
-    return render_template("recipe.html",recipe=recipe)
+    return render_template("recipe.html",recipe=recipe, categories = categories, editable = editable)
 
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):
     if "user_id" not in session:
         return redirect("/login")
     recipe = recipes.get_recipe_for_edit(session["user_id"], recipe_id)
-    categories = recipes.get_categories_by_recipe_id(recipe_id)
+    categories = recipes.get_categoryids_by_recipe_id(recipe_id)
     if not recipe:
         return render_template("error.html", error = "Ei käyttöoikeutta tähän reseptiin")
     return render_template("edit_recipe.html",recipe=recipe, categories=categories)
@@ -137,7 +141,8 @@ def show_user(user_id):
     return render_template(
         "show_user.html",
         recipes=user_recipes,
-        user=user)
+        user=user,
+        recipe_count = len(user_recipes))
 
 @app.route("/search")
 def search():

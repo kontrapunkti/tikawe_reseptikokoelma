@@ -97,15 +97,24 @@ def get_recent_recipes(count):
         LIMIT ?
         """, [count])
 
-def get_categories_by_recipe_id(recipe_id):
+def get_categoryids_by_recipe_id(recipe_id):
     result = db.query("""
         SELECT category_id
         FROM recipe_categories
         WHERE recipe_id = ?""", [recipe_id])
-    print(result)
     ids = []
-    
     for cat_id in result:
         ids.append(cat_id["category_id"])
-    print(ids)
     return ids
+
+def get_categorynames_by_recipe_id(recipe_id):
+    result = db.query("""
+        SELECT name
+        FROM categories
+        LEFT JOIN recipe_categories
+        ON categories.id = recipe_categories.category_id
+        WHERE recipe_categories.recipe_id = ?""", [recipe_id])
+    names = []
+    for cat_id in result:
+        names.append(cat_id["name"])
+    return names

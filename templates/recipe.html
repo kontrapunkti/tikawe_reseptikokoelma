@@ -4,5 +4,20 @@
 <h1>{{ recipe.title }}</h1>
 <h2>Tekijä: <a href="/show_user/{{ recipe.creator_id }}"> {{ recipe.username }}</a></h2>
 <p>{{ recipe.content }}</p>
-
+{% if categories %}
+<h2>Luokittelut</h2>
+<ul>
+    {% for category in categories %}
+        <li>{{category}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if editable %}
+    <a href="/edit_recipe/{{ recipe.id }}">
+        <button>Muokkaa</button>
+    </a>
+    <a href ="delete_recipe/{{recipe.id }}">
+        <button>Poista</button>
+    </a>
+{% endif %}
 {% endblock %}
