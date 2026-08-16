@@ -15,6 +15,7 @@
   <p>
     Kategoriat:
   </p>
+    <input type="hidden" name="csrf_token" value = "{{ session.csrf_token }}">
     <input type="checkbox" name="categories" value="1">
     <label>Gluteeniton</label><br>
     <input type="checkbox" name="categories" value="2">

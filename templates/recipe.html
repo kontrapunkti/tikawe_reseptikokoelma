@@ -3,6 +3,7 @@
 {% block content %}
 <h1>{{ recipe.title }}</h1>
 <h2>Tekijä: <a href="/show_user/{{ recipe.creator_id }}"> {{ recipe.username }}</a></h2>
+<h3>Käyttäjien arviointeja {{ rate_count }}, keskiarvo {{ rate_average }}</h3>
 <p>{{ recipe.content }}</p>
 {% if categories %}
 <h2>Luokittelut</h2>
@@ -19,5 +20,18 @@
     <a href ="delete_recipe/{{recipe.id }}">
         <button>Poista</button>
     </a>
+{% endif %}
+{% if rate_available %}
+<h2>Arvioi resepti:</h2>
+<form action="/rate_recipe" method = "post">
+    <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+    <input type="radio" name="rate" value="1" required><label>1</label><br>
+    <input type="radio" name="rate" value="2"><label>2</label><br>
+    <input type="radio" name="rate" value="3"><label>3</label><br>
+    <input type="radio" name="rate" value="4"><label>4</label><br>
+    <input type="radio" name="rate" value="5"><label>5</label><br>
+    <input type="submit" value="Tallenna arvio" />
+</form>
+
 {% endif %}
 {% endblock %}

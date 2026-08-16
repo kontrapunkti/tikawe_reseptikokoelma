@@ -1,8 +1,8 @@
 from flask import Flask
 from flask import render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import config
-import recipes, users
+import secrets
+import config, recipes, users, ratings
 
 import db
 db.init_db()
@@ -28,6 +28,7 @@ def login():
     if username and check_password_hash(pw_hash, password):
         session["username"] = username
         session["user_id"] = user_id
+        session["csrf_token"] = secrets.token_hex(16)
         return redirect("/user")
     else:
         return render_template("login.html", error=True)
@@ -62,12 +63,14 @@ def create():
 
 @app.route("/user")
 def user_page():
-    if "username" not in session:
+    if "user_id" not in session:
         return redirect("/login")
+    rate_count = ratings.count_ratings_by_user_id(session["user_id"])
+    rate_average = ratings.average_by_user_id(session["user_id"])
     username = session["username"]
     user_id = session["user_id"]
     user_recipes = recipes.get_user_recipes(user_id)
-    return render_template("user.html",username=username,recipes=user_recipes,recipe_count=len(user_recipes))
+    return render_template("user.html",username=username,recipes=user_recipes,recipe_count=len(user_recipes), rate_count= rate_count, rate_average=rate_average)
 
 @app.route("/new_recipe")
 def new_recipe():
@@ -93,13 +96,19 @@ def create_recipe():
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = recipes.get_recipe_by_id(recipe_id)
-    categories = recipes.get_categorynames_by_recipe_id(recipe_id)
-    editable = False
-    if "user_id" in session:
-        editable = (session["user_id"] == recipe["creator_id"])
+    rate_count = ratings.count_ratings_by_recipe_id(recipe_id)
+    rate_average = ratings.average_by_recipe_id(recipe_id)
     if not recipe:
         return render_template("error.html", error="Reseptiä ei löytynyt")
-    return render_template("recipe.html",recipe=recipe, categories = categories, editable = editable)
+    categories = recipes.get_categorynames_by_recipe_id(recipe_id)
+    editable = False
+    rate_available = False
+    if "user_id" in session:
+        editable = (session["user_id"] == recipe["creator_id"])
+        rate_available = (session["user_id"] != recipe["creator_id"])
+    return render_template("recipe.html", recipe=recipe, categories = categories,
+                           editable = editable, rate_available = rate_available,
+                           rate_count = rate_count, rate_average = rate_average)
 
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):
@@ -115,6 +124,8 @@ def edit_recipe(recipe_id):
 def update_recipe(recipe_id):
     if "user_id" not in session:
         return redirect("/login")
+    if request.form.get["csrf_token"] != session["csrf_token"]:
+        return render_template("error.html",error="Virheellinen pyyntö")
     categories = request.form.getlist("categories")
     title = request.form["title"]
     content = request.form["content"]
@@ -153,3 +164,16 @@ def search_results():
     query = request.form["query"]
     result = recipes.search_recipes_from_title(query)
     return render_template("search.html", recipes=result)
+
+@app.route("/rate_recipe", methods=["POST"])
+def rate_recipe():
+    if "user_id" not in session:
+        return redirect("/login")
+    if request.form.get["csrf_token"] != session["csrf_token"]:
+        return render_template("error.html",error="Virheellinen pyyntö")
+    recipe_id = int(request.form["recipe_id"])
+    rate = int(request.form["rate"])
+    if ratings.rate_recipe(recipe_id, session["user_id"], rate):
+        return redirect(f"/recipe/{recipe_id}")
+    else:
+        return render_template("error.html", error = "Virheellinen arvio")
