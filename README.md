@@ -26,10 +26,16 @@ Tämä projekti on suoraan kurssimateriaalin ehdotuksista
 pip install flask
 ```
 
-Luo tietokannan taulut ja lisää alkutiedot:
+Luo tietokannan taulut:
 
 ```
 $ sqlite3 database.db < schema.sql
+```
+
+## Demoaineisto
+Jos haluat luoda demoaineiston, aja seuraava komento
+```
+$ python3 demodata.py
 ```
 
 Käynnistä sovellus:

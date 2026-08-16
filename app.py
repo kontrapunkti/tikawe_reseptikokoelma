@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import config
-import recipes, users
+import recipes, users, demodata
 
 import db
 db.init_db()

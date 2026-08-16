@@ -1,14 +1,10 @@
-DROP TABLE IF EXISTS recipes;
-DROP TABLE IF EXISTS users;
-
-
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE,
     password_hash TEXT
 );
 
-CREATE TABLE recipes(
+CREATE TABLE IF NOT EXISTS recipes(
     id INTEGER PRIMARY KEY,
     creator_id INTEGER REFERENCES users,
     title TEXT,
