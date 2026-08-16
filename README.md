@@ -20,6 +20,16 @@ Tämä projekti on suoraan kurssimateriaalin ehdotuksista
 * Käyttäjä näkee sovellukseen lisätyt tietokohteet etusivulla, käyttäjäsivulla ja hakukentässä
 * Käyttäjä pystyy etsimään tietokohteita hakusanalla otsikosta
 
+## Välipalautus 3
+* Sovelluksessa on käyttäjäsivut, jotka näyttävät tilastoja ja käyttäjän lisäämät tietokohteet.
+* Käyttäjä pystyy valitsemaan tietokohteelle yhden tai useamman luokittelun. Mahdolliset luokat ovat tietokannassa.
+* Käyttäjä pystyy lähettämään toisen käyttäjän tietokohteeseen liittyen jotain lisätietoa, joka tulee näkyviin sovelluksessa.
+
+* Kehitettävää on vielä ainakin
+  * Hakutoiminnossa on kehitettävää, toimii toistaiseksi edelleen vain otsikosta
+  * CSRF-aukkojen tuplavarmistus
+  * Indeksointi
+
 ## Sovelluksen asennus
 
 ```
