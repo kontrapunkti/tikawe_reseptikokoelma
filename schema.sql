@@ -1,11 +1,6 @@
-DROP TABLE IF EXISTS visits;
 DROP TABLE IF EXISTS recipes;
 DROP TABLE IF EXISTS users;
 
-CREATE TABLE visits (
-    id INTEGER PRIMARY KEY,
-    visited_at TEXT
-);
 
 CREATE TABLE users(
     id INTEGER PRIMARY KEY,
@@ -17,5 +12,7 @@ CREATE TABLE recipes(
     id INTEGER PRIMARY KEY,
     creator_id INTEGER REFERENCES users,
     title TEXT,
-    content TEXT
+    content TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    edited_at TEXT DEFAULT CURRENT_TIMESTAMP
 );

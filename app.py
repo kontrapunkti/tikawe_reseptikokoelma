@@ -6,14 +6,15 @@ import config
 import recipes, users
 
 import db
-#db.init_db()
+db.init_db()
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html", recipes=recipes)
+    recent_recipes = recipes.get_recent_recipes(10)
+    return render_template("index.html", recipes=recent_recipes)
 
 @app.route("/login", methods=["POST"])
 def login():

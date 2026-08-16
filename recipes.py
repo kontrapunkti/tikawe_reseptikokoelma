@@ -1,5 +1,5 @@
 import db
-import sqlite3
+import datetime
 
 def get_user_recipes(user_id):
     sql = """
@@ -13,7 +13,7 @@ def get_user_recipes(user_id):
 def create_recipe(creator_id, title, content):
     con = db.connect()
     con.execute("INSERT INTO recipes (creator_id, title, content) VALUES (?, ?, ?)",
-        [creator_id, title, content])
+        [creator_id, title.title(), content])
     con.commit()
     con.close()
 
@@ -54,9 +54,9 @@ def edit_recipe(user_id, recipe_id, title, content):
     con = db.connect()
     sql = """
     UPDATE recipes
-    SET title = ?, content = ?
+    SET title = ?, content = ?, edited_at = CURRENT_TIMESTAMP
     WHERE id = ?"""
-    con.execute(sql, [title, content, recipe_id])
+    con.execute(sql, [title.title(), content, recipe_id])
     con.commit()
     con.close()
     return True
@@ -82,3 +82,11 @@ def search_recipes_from_title(query):
             FROM recipes
             WHERE title LIKE ?
         """, [f'%{query}%'])
+
+def get_recent_recipes(count):
+    return db.query("""
+        SELECT id, title, created_at
+        FROM recipes
+        ORDER BY created_at DESC
+        LIMIT ?
+        """, [count])
