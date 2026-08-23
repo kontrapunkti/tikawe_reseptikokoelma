@@ -17,13 +17,14 @@
     <a href="/edit_recipe/{{ recipe.id }}">
         <button>Muokkaa</button>
     </a>
-    <a href ="delete_recipe/{{recipe.id }}">
+    <a href ="/delete_recipe/{{recipe.id }}">
         <button>Poista</button>
     </a>
 {% endif %}
 {% if rate_available %}
 <h2>Arvioi resepti:</h2>
 <form action="/rate_recipe" method = "post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
     <input type="radio" name="rate" value="1" required><label>1</label><br>
     <input type="radio" name="rate" value="2"><label>2</label><br>

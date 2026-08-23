@@ -6,6 +6,7 @@
 <h1>Etsi reseptejä</h1>
 <p><a href="/">Etusivu</a></p>
   <form action="/search" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
   <p>
     Hakusana: <br />
     <input type="text" name="query" />

@@ -36,7 +36,7 @@ a:hover {
 }
 
 form {
-    background-color: white;
+    background-color: #c7c7c7;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -99,4 +99,15 @@ hr {
 
 .nav a:hover {
     text-decoration: underline;
+}
+
+.recipe-actions {
+    display: flex;
+    gap: 20 px;
+    align-items: center;
+}
+
+.recipe-actions form {
+    margin: 0;
+    display: contents;
 }

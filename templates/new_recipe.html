@@ -4,6 +4,7 @@
 {% block content %}
 <h2>Luo uusi resepti</h2>
 <form action="/create_recipe" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
   <p>
     Otsikko: <br />
     <input type="text" name="title" />
@@ -15,7 +16,6 @@
   <p>
     Kategoriat:
   </p>
-    <input type="hidden" name="csrf_token" value = "{{ session.csrf_token }}">
     <input type="checkbox" name="categories" value="1">
     <label>Gluteeniton</label><br>
     <input type="checkbox" name="categories" value="2">

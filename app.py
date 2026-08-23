@@ -48,6 +48,8 @@ def register():
 
 @app.route("/create", methods=["POST"])
 def create():
+    if request.form.get("csrf_token") != session["csrf_token"]:
+        return render_template("error.html",error="Virheellinen pyyntö")
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
@@ -82,13 +84,15 @@ def new_recipe():
 def create_recipe():
     if "user_id" not in session:
         return redirect("/login")
+    if request.form.get("csrf_token") != session["csrf_token"]:
+        return render_template("error.html",error="Virheellinen pyyntö")
     title = request.form["title"]
     content = request.form["content"]
     categories = request.form.getlist("categories")
     if title == "":
         return render_template("registererror.html", error = "Otsikko ei voi olla tyhjä")
     if content == "":
-        return render_template("registererror.html", error = "Respeti ei voi olla tyhjä")
+        return render_template("registererror.html", error = "Resepti ei voi olla tyhjä")
     recipes.create_recipe(session["user_id"], title, content, categories)
 
     return redirect("/user")
@@ -124,23 +128,24 @@ def edit_recipe(recipe_id):
 def update_recipe(recipe_id):
     if "user_id" not in session:
         return redirect("/login")
-    if request.form.get["csrf_token"] != session["csrf_token"]:
+    if request.form.get("csrf_token") != session["csrf_token"]:
         return render_template("error.html",error="Virheellinen pyyntö")
     categories = request.form.getlist("categories")
     title = request.form["title"]
     content = request.form["content"]
     if not recipes.edit_recipe(session["user_id"], recipe_id, title, content, categories):
-        return render_template("error.html", error = "Virhe päivityksessä, ei käyttöoikeutta reseptiin tai muu tekninen virhe. Tarkista kirjautuminen ja kokeile uudestaan.")
+        return render_template("error.html", error = "Sinulla ei ole oikeutta muokata tätä reseptiä.")
 
     return redirect("/user")
 
-@app.route("/delete_recipe/<int:recipe_id>")
+@app.route("/delete_recipe/<int:recipe_id>", methods=["POST"])
 def delete_recipe(recipe_id):
     if "user_id" not in session:
         return redirect("/login")
-
+    if request.form.get("csrf_token") != session["csrf_token"]:
+        return render_template("error.html",error="Virheellinen pyyntö")
     if not recipes.delete_recipe(session["user_id"], recipe_id):
-        return render_template("error.html", error = "Virhe reseptin poistamisessa, ei käyttöoikeutta reseptiin tai muu tekninen virhe. Tarkista kirjautuminen ja kokeile uudestaan.")
+        return render_template("error.html", error = "Sinulla ei ole oikeutta poistaa tätä reseptiä.")
     return redirect("/user")
 
 @app.route("/show_user/<int:user_id>")
@@ -161,6 +166,8 @@ def search():
 
 @app.route("/search", methods=["POST"])
 def search_results():
+    if request.form.get("csrf_token") != session["csrf_token"]:
+        return render_template("error.html",error="Virheellinen pyyntö")
     query = request.form["query"]
     result = recipes.search_recipes_from_title(query)
     return render_template("search.html", recipes=result)
@@ -169,7 +176,7 @@ def search_results():
 def rate_recipe():
     if "user_id" not in session:
         return redirect("/login")
-    if request.form.get["csrf_token"] != session["csrf_token"]:
+    if request.form.get("csrf_token") != session["csrf_token"]:
         return render_template("error.html",error="Virheellinen pyyntö")
     recipe_id = int(request.form["recipe_id"])
     rate = int(request.form["rate"])

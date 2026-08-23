@@ -20,18 +20,19 @@
 
 {% if recipes %}
   {% for recipe in recipes %}
-    <div>
-      <h3>{{ recipe.title }}</h3>
-
-    <a href="/recipe/{{ recipe.id }}">Avaa</a>
-
-      <a href="/edit_recipe/{{ recipe.id }}">
-        <button>Muokkaa</button>
-      </a>
-
-        <a href ="delete_recipe/{{recipe.id }}">
-        <button>Poista</button>
-      </a>
+  <h3>{{ recipe.title }}</h3>  
+  <div class="recipe-actions">
+      
+    <a href="/recipe/{{ recipe.id }}">
+      <button>Avaa</button>
+    </a>
+    <a href="/edit_recipe/{{ recipe.id }}">
+      <button>Muokkaa</button>
+    </a>
+      <form action="/delete_recipe/{{recipe.id }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Poista resepti" />
+      </form>
     </div>
     <hr>
   {% endfor %}

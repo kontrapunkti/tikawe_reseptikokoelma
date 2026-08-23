@@ -6,6 +6,7 @@
 <h1>Muokkaa reseptiä</h1>
 
 <form action="/update_recipe/{{ recipe.id }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <p>
         Otsikko:<br>
         <input type="text" name="title" value="{{ recipe.title }}">
@@ -26,8 +27,6 @@
         <label>Vähälaktoosinen</label><br>
         <input type="checkbox" name="categories" value="4" {% if 4 in categories %} checked {% endif %}>
         <label>Vegaaninen</label><br>
-
-
         <input type="submit" value="Tallenna muutokset">
 
 </form>
