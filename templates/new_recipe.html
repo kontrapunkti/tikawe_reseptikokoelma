@@ -7,11 +7,11 @@
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
   <p>
     Otsikko: <br />
-    <input type="text" name="title" />
+    <input type="text" name="title" maxlength="50" required />
   </p>
   <p>
     Resepti:<br />
-    <textarea name="content" rows="5" cols="40"></textarea>
+    <textarea name="content" rows="5" cols="40" maxlength="10000" required></textarea>
   </p>
   <p>
     Kategoriat:

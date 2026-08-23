@@ -17,8 +17,12 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.form["username"].strip()
+    password = request.form["password"].strip()
+    if len(username) > 50 or len(password) > 50:
+        return render_template("error.html", error="Liian pitkä käyttäjätunnus tai salasana")
+    if not username or not password:
+        return render_template("login.html", error=True)
     result = users.get_user_and_pwhash_by_username(username)
     if len(result)==0:
         return render_template("login.html", error=True)
@@ -39,7 +43,7 @@ def login_page():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    session.clear()
     return redirect("/")
 
 @app.route("/register")
@@ -48,11 +52,13 @@ def register():
 
 @app.route("/create", methods=["POST"])
 def create():
-    if request.form.get("csrf_token") != session["csrf_token"]:
-        return render_template("error.html",error="Virheellinen pyyntö")
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
+    username = request.form["username"].strip()
+    password1 = request.form["password1"].strip()
+    password2 = request.form["password2"].strip()
+    if len(username) > 50 or len(password1) > 50 or len(password2) > 50:
+        return render_template("error.html", error="Liian pitkä käyttäjätunnus tai salasana")
+    if not username or not password1 or not password2:
+        return render_template("registererror.html", error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
     if password1 != password2:
         return render_template("registererror.html", error = "Salasanat eivät vastanneet toisiaan")
     if username == "" or password1 == "":
@@ -86,13 +92,17 @@ def create_recipe():
         return redirect("/login")
     if request.form.get("csrf_token") != session["csrf_token"]:
         return render_template("error.html",error="Virheellinen pyyntö")
-    title = request.form["title"]
-    content = request.form["content"]
+    title = request.form["title"].strip()
+    content = request.form["content"].strip()
     categories = request.form.getlist("categories")
-    if title == "":
-        return render_template("registererror.html", error = "Otsikko ei voi olla tyhjä")
-    if content == "":
-        return render_template("registererror.html", error = "Resepti ei voi olla tyhjä")
+    if not title:
+        return render_template("error.html", error = "Otsikko ei voi olla tyhjä")
+    if not content:
+        return render_template("error.html", error = "Resepti ei voi olla tyhjä")
+    if len(title)>50:
+        return render_template("error.html", error = "Liian pitkä otsikko")
+    if len(content)>10000:
+        return render_template("error.html", error = "Liian pitkä resepti")
     recipes.create_recipe(session["user_id"], title, content, categories)
 
     return redirect("/user")
@@ -131,8 +141,16 @@ def update_recipe(recipe_id):
     if request.form.get("csrf_token") != session["csrf_token"]:
         return render_template("error.html",error="Virheellinen pyyntö")
     categories = request.form.getlist("categories")
-    title = request.form["title"]
-    content = request.form["content"]
+    title = request.form["title"].strip()
+    content = request.form["content"].strip()
+    if not title:
+        return render_template("error.html", error = "Otsikko ei voi olla tyhjä")
+    if not content:
+        return render_template("error.html", error = "Resepti ei voi olla tyhjä")
+    if len(title)>50:
+        return render_template("error.html", error = "Liian pitkä otsikko")
+    if len(content)>10000:
+        return render_template("error.html", error = "Liian pitkä resepti")
     if not recipes.edit_recipe(session["user_id"], recipe_id, title, content, categories):
         return render_template("error.html", error = "Sinulla ei ole oikeutta muokata tätä reseptiä.")
 
