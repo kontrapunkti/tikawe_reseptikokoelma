@@ -13,7 +13,7 @@
   </p>
   <input type="submit" value="Hae" />
 </form>
-<p>Käytä yllä olevaa hakukenttää. Tässä vaiheessa haku toimii vain otsikkokentästä.</p>
+<p>Etsi reseptejä otsikolla</p>
 <h2>Hakutulokset</h2>
 {% if recipes %}
   {% for recipe in recipes %}
@@ -23,6 +23,6 @@
     <a href="/recipe/{{ recipe.id }}">Avaa</a>
     </div>
     <hr>
-  {% endfor %}      
+  {% endfor %}
 {% endif %}
 {% endblock %}

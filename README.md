@@ -12,52 +12,39 @@ Tämä projekti on suoraan kurssimateriaalin ehdotuksista
 * Käyttäjä pystyy valitsemaan esimerkiksi seuraavia luokitteluja:
   * Ruoan tyyppi: alkuruoka, pääruoka tai jälkiruoka
   * Ruokavalio: laktoositon, gluteeniton tai vegaaninen
-* Käyttäjä pystyy antamaan reseptille kommentin ja arvosanan. Reseptistä näytetään kommentit ja keskimääräinen arvosana.
-
-## Välipalautus 2
-* Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen
-* Käyttäjä pystyy lisäämään, muokkaamaan ja poistamaan reseptejä
-* Käyttäjä näkee sovellukseen lisätyt tietokohteet etusivulla, käyttäjäsivulla ja hakukentässä
-* Käyttäjä pystyy etsimään tietokohteita hakusanalla otsikosta
-
-## Välipalautus 3
-* Sovelluksessa on käyttäjäsivut, jotka näyttävät tilastoja ja käyttäjän lisäämät tietokohteet.
-* Käyttäjä pystyy valitsemaan tietokohteelle yhden tai useamman luokittelun. Mahdolliset luokat ovat tietokannassa.
-* Käyttäjä pystyy lähettämään toisen käyttäjän tietokohteeseen liittyen jotain lisätietoa, joka tulee näkyviin sovelluksessa.
-
-* Kehitettävää on vielä ainakin
-  * Hakutoiminnossa on kehitettävää, toimii toistaiseksi edelleen vain otsikosta
-  * CSRF-aukkojen tuplavarmistus
-  * Indeksointi
+* Käyttäjä pystyy antamaan reseptille arvosanan. Reseptistä näytetään arvioiden määrä ja keskimääräinen arvosana.
+* Käyttäjä voi muuttaa aiemmin antamaansa arvosanaa.
+* Käyttäjä näkee omien reseptiensä arviointitilastot käyttäjäsivulla.
 
 ## Sovelluksen asennus
 
+1. Asenna Flask
 ```
 pip install flask
 ```
 
-Luo tietokannan taulut:
+2. Luo tietokanta
 
 ```
 $ sqlite3 database.db < schema.sql
 ```
 
-## Demoaineisto
-Jos haluat luoda demoaineiston, aja seuraava komento
-```
-$ python3 demodata.py
-```
-
-Demoaineistossa on 10 käyttäjää, joiden kaikkien salasana on "salasana". Jokaiselle on luotu eri määrä reseptejä.
-
-```
-usernames = ["kalle", "maija",, "pekka", "matti", "liisa", "anna", "jari", "minna", "teemu", "sara"]
-```
-
-## Sovelluksen käynnistäminen
-
-Käynnistä sovellus:
- 
+4. Käynnistä sovellus
 ```
 flask run
 ```
+
+## Demoaineisto
+Jos haluat luoda demoaineiston, aja seuraava komento ennen sovelluksen käynnistämistä.
+```
+python3 demodata.py
+```
+
+Demoaineistossa on 10 käyttäjää, joiden kaikkien salasana on "salasana". Jokaiselle on luotu eri määrä reseptejä. Tiedosto tyhjentää tietokannan ja luo satunnaiset reseptit, mutta ei luo arviointeja.
+
+```
+usernames = ["kalle", "maija", "pekka", "matti", "liisa", "anna", "jari", "minna", "teemu", "sara"]
+```
+
+## Config
+Vaihda tiedoston config.py secret_key johonkin satunnaiseen merkkijonoon ennen sovelluksen käyttöönottoa.

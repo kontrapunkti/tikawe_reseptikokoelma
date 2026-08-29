@@ -1,5 +1,5 @@
-import db
 import sqlite3
+import db
 
 def get_user_and_pwhash_by_username(username):
     sql = "SELECT id, password_hash FROM users WHERE username = ?"
@@ -28,4 +28,3 @@ def create_user(username, password_hash):
         return False
     finally:
         con.close()
-

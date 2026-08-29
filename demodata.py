@@ -5,6 +5,8 @@ import db
 from werkzeug.security import generate_password_hash
 
 con = db.connect()
+con.execute("DELETE FROM ratings")
+con.execute("DELETE FROM recipe_categories")
 con.execute("DELETE FROM recipes")
 con.execute("DELETE FROM users")
 

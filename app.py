@@ -2,10 +2,10 @@ import secrets
 from flask import Flask
 from flask import render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import config, recipes, users, ratings
-
-import db
-db.init_db()
+import config
+import recipes
+import users
+import ratings
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -20,7 +20,8 @@ def login():
     username = request.form["username"].strip()
     password = request.form["password"].strip()
     if len(username) > 50 or len(password) > 50:
-        return render_template("error.html", error="Liian pitkä käyttäjätunnus tai salasana")
+        return render_template("error.html",
+                               error="Liian pitkä käyttäjätunnus tai salasana")
     if not username or not password:
         return render_template("login.html", error=True)
     result = users.get_user_and_pwhash_by_username(username)
@@ -54,16 +55,19 @@ def create():
     password1 = request.form["password1"].strip()
     password2 = request.form["password2"].strip()
     if len(username) > 50 or len(password1) > 50 or len(password2) > 50:
-        return render_template("error.html", error="Liian pitkä käyttäjätunnus tai salasana")
+        return render_template("error.html",
+                               error="Liian pitkä käyttäjätunnus tai salasana")
     if not username or not password1 or not password2:
         return render_template("register.html",
-                               error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
+                               error = """Käyttäjätunnus tai
+                               salasana ei voi olla tyhjä merkkijono""")
     if password1 != password2:
         return render_template("register.html",
                                error = "Salasanat eivät vastanneet toisiaan")
     if username == "" or password1 == "":
         return render_template("register.html",
-                               error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
+                               error = """Käyttäjätunnus tai salasana
+                               ei voi olla tyhjä merkkijono""")
     password_hash = generate_password_hash(password1)
     success = users.create_user(username, password_hash)
     if not success:
@@ -76,6 +80,7 @@ def user_page():
         return redirect("/login")
     rate_count = ratings.count_ratings_by_user_id(session["user_id"])
     rate_average = ratings.average_by_user_id(session["user_id"])
+    rate_average = round(rate_average, 2)
     username = session["username"]
     user_id = session["user_id"]
     user_recipes = recipes.get_user_recipes(user_id)
@@ -113,7 +118,8 @@ def create_recipe():
                                errors=errors, title=title,
                                content=content, categories=categories,
                                recipe_type=recipe_type)
-    recipes.create_recipe(session["user_id"], title, content, categories, recipe_type)
+    recipes.create_recipe(session["user_id"],
+                          title, content, categories, recipe_type)
 
     return redirect("/user")
 
@@ -122,6 +128,7 @@ def show_recipe(recipe_id):
     recipe = recipes.get_recipe_by_id(recipe_id)
     rate_count = ratings.count_ratings_by_recipe_id(recipe_id)
     rate_average = ratings.average_by_recipe_id(recipe_id)
+    rate_average = round(rate_average, 2)
     if not recipe:
         return render_template("error.html", error="Reseptiä ei löytynyt")
     categories = recipes.get_categorynames_by_recipe_id(recipe_id)
@@ -132,7 +139,8 @@ def show_recipe(recipe_id):
         editable = session["user_id"] == recipe["creator_id"]
         rate_available = session["user_id"] != recipe["creator_id"]
         if rate_available:
-            rate = ratings.get_rating_by_user_id_and_recipe_id(session["user_id"], recipe_id)
+            rate = ratings.get_rating_by_user_id_and_recipe_id(session["user_id"],
+                                                               recipe_id)
     return render_template("recipe.html", recipe=recipe, categories = categories,
                            editable = editable, rate_available = rate_available,
                            rate_count = rate_count, rate_average = rate_average,
@@ -192,6 +200,7 @@ def show_user(user_id):
     user = users.get_username_from_id(user_id)
     rate_count = ratings.count_ratings_by_user_id(user_id)
     rate_average = ratings.average_by_user_id(user_id)
+    rate_average = round(rate_average, 2)
     if not user:
         return render_template("Error.html", error = "Käyttäjää ei löytynyt")
     return render_template(

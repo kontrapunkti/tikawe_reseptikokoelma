@@ -1,5 +1,4 @@
 import db
-import datetime
 
 def get_user_recipes(user_id):
     sql = """
@@ -81,8 +80,9 @@ def delete_recipe(user_id, recipe_id):
     if len(result) == 0:
         return False
     con = db.connect()
-    con.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
     con.execute("DELETE FROM recipe_categories WHERE recipe_id = ?", [recipe_id])
+    con.execute("DELETE FROM ratings WHERE recipe_id = ?", [recipe_id])
+    con.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
     con.commit()
     con.close()
     return True
