@@ -16,12 +16,15 @@
 </ul>
 {% endif %}
 {% if editable %}
-    <a href="/edit_recipe/{{ recipe.id }}">
-        <button>Muokkaa</button>
-    </a>
-    <a href ="/delete_recipe/{{recipe.id }}">
-        <button>Poista</button>
-    </a>
+    <div class="recipe-actions">
+        <a href="/edit_recipe/{{ recipe.id }}">
+            <button>Muokkaa</button>
+        </a>
+        <form action="/delete_recipe/{{recipe.id }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="submit" value="Poista resepti" />
+        </form>
+    </div>
 {% endif %}
 {% if rate_available %}
 <h2>Arvioi resepti:</h2>
