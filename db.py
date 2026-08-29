@@ -1,7 +1,9 @@
-import sqlite3, flask
+import sqlite3
+from flask import g
 
 def connect():
     connection = sqlite3.connect("database.db")
+    connection.execute("PRAGMA foreign_keys = ON")
     connection.row_factory = sqlite3.Row
     return connection
 

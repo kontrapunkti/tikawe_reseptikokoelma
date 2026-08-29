@@ -1,7 +1,7 @@
+import secrets
 from flask import Flask
 from flask import render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-import secrets
 import config, recipes, users, ratings
 
 import db
@@ -26,16 +26,14 @@ def login():
     result = users.get_user_and_pwhash_by_username(username)
     if len(result)==0:
         return render_template("login.html", error=True)
-    else:
-        user_id = result[0]["id"]
-        pw_hash = result[0]["password_hash"]
+    user_id = result[0]["id"]
+    pw_hash = result[0]["password_hash"]
     if username and check_password_hash(pw_hash, password):
         session["username"] = username
         session["user_id"] = user_id
         session["csrf_token"] = secrets.token_hex(16)
         return redirect("/user")
-    else:
-        return render_template("login.html", error=True)
+    return render_template("login.html", error=True)
 
 @app.route("/login")
 def login_page():
@@ -58,11 +56,14 @@ def create():
     if len(username) > 50 or len(password1) > 50 or len(password2) > 50:
         return render_template("error.html", error="Liian pitkä käyttäjätunnus tai salasana")
     if not username or not password1 or not password2:
-        return render_template("registererror.html", error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
+        return render_template("registererror.html",
+                               error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
     if password1 != password2:
-        return render_template("registererror.html", error = "Salasanat eivät vastanneet toisiaan")
+        return render_template("registererror.html",
+                               error = "Salasanat eivät vastanneet toisiaan")
     if username == "" or password1 == "":
-        return render_template("registererror.html", error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
+        return render_template("registererror.html",
+                               error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
     password_hash = generate_password_hash(password1)
     success = users.create_user(username, password_hash)
     if not success:
@@ -78,7 +79,9 @@ def user_page():
     username = session["username"]
     user_id = session["user_id"]
     user_recipes = recipes.get_user_recipes(user_id)
-    return render_template("user.html",username=username,recipes=user_recipes,recipe_count=len(user_recipes), rate_count= rate_count, rate_average=rate_average)
+    return render_template("user.html",username=username,
+                           recipes=user_recipes,recipe_count=len(user_recipes),
+                           rate_count= rate_count, rate_average=rate_average)
 
 @app.route("/new_recipe")
 def new_recipe():
@@ -96,14 +99,20 @@ def create_recipe():
     content = request.form["content"].strip()
     categories = request.form.getlist("categories")
     recipe_type = request.form["recipe_type"]
+    errors = []
     if not title:
-        return render_template("error.html", error = "Otsikko ei voi olla tyhjä")
+        errors.append("Otsikko ei voi olla tyhjä")
     if not content:
-        return render_template("error.html", error = "Resepti ei voi olla tyhjä")
+        errors.append("Resepti ei voi olla tyhjä")
     if len(title)>50:
-        return render_template("error.html", error = "Liian pitkä otsikko")
+        errors.append("Liian pitkä otsikko")
     if len(content)>10000:
-        return render_template("error.html", error = "Liian pitkä resepti")
+        errors.append("Liian pitkä resepti")
+    if errors:
+        return render_template("new_recipe.html",
+                               errors=errors, title=title,
+                               content=content, categories=categories,
+                               recipe_type=recipe_type)
     recipes.create_recipe(session["user_id"], title, content, categories, recipe_type)
 
     return redirect("/user")
@@ -119,8 +128,8 @@ def show_recipe(recipe_id):
     editable = False
     rate_available = False
     if "user_id" in session:
-        editable = (session["user_id"] == recipe["creator_id"])
-        rate_available = (session["user_id"] != recipe["creator_id"])
+        editable = session["user_id"] == recipe["creator_id"]
+        rate_available = session["user_id"] != recipe["creator_id"]
     return render_template("recipe.html", recipe=recipe, categories = categories,
                            editable = editable, rate_available = rate_available,
                            rate_count = rate_count, rate_average = rate_average)
@@ -145,16 +154,21 @@ def update_recipe(recipe_id):
     title = request.form["title"].strip()
     content = request.form["content"].strip()
     recipe_type = request.form["recipe_type"]
+    errors = []
     if not title:
-        return render_template("error.html", error = "Otsikko ei voi olla tyhjä")
+        errors.append("Otsikko ei voi olla tyhjä")
     if not content:
-        return render_template("error.html", error = "Resepti ei voi olla tyhjä")
+        errors.append("Resepti ei voi olla tyhjä")
     if len(title)>50:
-        return render_template("error.html", error = "Liian pitkä otsikko")
+        errors.append("Liian pitkä otsikko")
     if len(content)>10000:
-        return render_template("error.html", error = "Liian pitkä resepti")
-    if not recipes.edit_recipe( session["user_id"], recipe_id, title, content, categories, recipe_type ):
-        return render_template( "error.html", error="Sinulla ei ole oikeutta muokata tätä reseptiä." )
+        errors.append("Liian pitkä resepti")
+    if errors:
+        return render_template("error.html", errors = errors)
+    if not recipes.edit_recipe( session["user_id"],
+                               recipe_id, title, content, categories, recipe_type ):
+        return render_template( "error.html",
+                               error="Sinulla ei ole oikeutta muokata tätä reseptiä.")
     return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/delete_recipe/<int:recipe_id>", methods=["POST"])
@@ -164,7 +178,8 @@ def delete_recipe(recipe_id):
     if request.form.get("csrf_token") != session["csrf_token"]:
         return render_template("error.html",error="Virheellinen pyyntö")
     if not recipes.delete_recipe(session["user_id"], recipe_id):
-        return render_template("error.html", error = "Sinulla ei ole oikeutta poistaa tätä reseptiä.")
+        return render_template("error.html",
+                               error = "Sinulla ei ole oikeutta poistaa tätä reseptiä.")
     return redirect("/user")
 
 @app.route("/show_user/<int:user_id>")
@@ -205,5 +220,4 @@ def rate_recipe():
     rate = int(request.form["rate"])
     if ratings.rate_recipe(recipe_id, session["user_id"], rate):
         return redirect(f"/recipe/{recipe_id}")
-    else:
-        return render_template("error.html", error = "Virheellinen arvio")
+    return render_template("error.html", error = "Virheellinen arvio")
