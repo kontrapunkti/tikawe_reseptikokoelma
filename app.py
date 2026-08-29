@@ -56,18 +56,18 @@ def create():
     if len(username) > 50 or len(password1) > 50 or len(password2) > 50:
         return render_template("error.html", error="Liian pitkä käyttäjätunnus tai salasana")
     if not username or not password1 or not password2:
-        return render_template("registererror.html",
+        return render_template("register.html",
                                error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
     if password1 != password2:
-        return render_template("registererror.html",
+        return render_template("register.html",
                                error = "Salasanat eivät vastanneet toisiaan")
     if username == "" or password1 == "":
-        return render_template("registererror.html",
+        return render_template("register.html",
                                error = "Käyttäjätunnus tai salasana ei voi olla tyhjä merkkijono")
     password_hash = generate_password_hash(password1)
     success = users.create_user(username, password_hash)
     if not success:
-        return render_template("register_error.html", error="Käyttäjätunnus on varattu")
+        return render_template("register.html", error="Käyttäjätunnus on varattu")
     return render_template("login_successful.html")
 
 @app.route("/user")
@@ -127,12 +127,16 @@ def show_recipe(recipe_id):
     categories = recipes.get_categorynames_by_recipe_id(recipe_id)
     editable = False
     rate_available = False
+    rate = None
     if "user_id" in session:
         editable = session["user_id"] == recipe["creator_id"]
         rate_available = session["user_id"] != recipe["creator_id"]
+        if rate_available:
+            rate = ratings.get_rating_by_user_id_and_recipe_id(session["user_id"], recipe_id)
     return render_template("recipe.html", recipe=recipe, categories = categories,
                            editable = editable, rate_available = rate_available,
-                           rate_count = rate_count, rate_average = rate_average)
+                           rate_count = rate_count, rate_average = rate_average,
+                           rate = rate)
 
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):

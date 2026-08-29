@@ -19,4 +19,7 @@
   </p>
   <input type="submit" value="Luo uusi tunnus" />
 </form>
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
 {% endblock %}

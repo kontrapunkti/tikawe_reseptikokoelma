@@ -45,3 +45,10 @@ def count_ratings_by_user_id(user_id):
     return db.query("""SELECT COUNT(ratings.id) AS count FROM ratings, recipes
         WHERE ratings.recipe_id = recipes.id AND recipes.creator_id = ?""",
         [user_id])[0]["count"]
+
+def get_rating_by_user_id_and_recipe_id(user_id, recipe_id):
+    result = db.query("SELECT rate FROM ratings WHERE user_id = ? AND recipe_id = ?",
+                    [user_id, recipe_id])
+    if len(result) == 0:
+        return None
+    return result[0]["rate"]
