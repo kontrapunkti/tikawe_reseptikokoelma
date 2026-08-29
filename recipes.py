@@ -6,6 +6,7 @@ def get_user_recipes(user_id):
     SELECT id, title
     FROM recipes
     WHERE creator_id = ?
+    ORDER BY edited_at DESC, created_at DESC
     """
 
     return db.query(sql, [user_id])

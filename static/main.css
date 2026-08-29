@@ -111,3 +111,7 @@ hr {
     margin: 0;
     display: contents;
 }
+
+.recipe-content {
+    white-space: pre-line;
+}

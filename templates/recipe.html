@@ -4,10 +4,11 @@
 <h1>{{ recipe.title }}</h1>
 <h2>Tekijä: <a href="/show_user/{{ recipe.creator_id }}"> {{ recipe.username }}</a></h2>
 <h3>Käyttäjien arviointeja {{ rate_count }}, keskiarvo {{ rate_average }}</h3>
-<p>{{ recipe.content }}</p>
-{% if categories %}
+<p class="recipe-content">{{ recipe.content }}</p>
+
 <h2>Ruokalajin tyyppi</h2>
 <p> {{ recipe.recipe_type }}</p>
+{% if categories %}
 <h2>Luokittelut</h2>
 <ul>
     {% for category in categories %}

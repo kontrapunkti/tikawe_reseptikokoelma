@@ -153,10 +153,9 @@ def update_recipe(recipe_id):
         return render_template("error.html", error = "Liian pitkä otsikko")
     if len(content)>10000:
         return render_template("error.html", error = "Liian pitkä resepti")
-    if not recipes.edit_recipe(session["user_id"], recipe_id, title, content, categories, recipe_type):
-        return render_template("error.html", error = "Sinulla ei ole oikeutta muokata tätä reseptiä.")
-
-    return redirect("/user")
+    if not recipes.edit_recipe( session["user_id"], recipe_id, title, content, categories, recipe_type ):
+        return render_template( "error.html", error="Sinulla ei ole oikeutta muokata tätä reseptiä." )
+    return redirect(f"/recipe/{recipe_id}")
 
 @app.route("/delete_recipe/<int:recipe_id>", methods=["POST"])
 def delete_recipe(recipe_id):
@@ -172,13 +171,17 @@ def delete_recipe(recipe_id):
 def show_user(user_id):
     user_recipes = recipes.get_user_recipes(user_id)
     user = users.get_username_from_id(user_id)
+    rate_count = ratings.count_ratings_by_user_id(user_id)
+    rate_average = ratings.average_by_user_id(user_id)
     if not user:
         return render_template("Error.html", error = "Käyttäjää ei löytynyt")
     return render_template(
         "show_user.html",
         recipes=user_recipes,
         user=user,
-        recipe_count = len(user_recipes))
+        recipe_count = len(user_recipes),
+        rate_count = rate_count,
+        rate_average = rate_average)
 
 @app.route("/search")
 def search():

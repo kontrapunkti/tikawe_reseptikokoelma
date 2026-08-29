@@ -52,7 +52,7 @@ recipe_names = [
 ]
 
 for i in range(100):
-
+    type_id = random.randint(1, 3)
     user = random.choice(users)
 
     created_at = (
@@ -74,20 +74,10 @@ Valmistus:
 3. Tarjoile.
 """
 
-    con.execute(
-        """
-        INSERT INTO recipes
-        (creator_id, title, content, created_at, edited_at)
-        VALUES (?, ?, ?, ?, ?)
-        """,
-        [
-            user["id"],
-            title,
-            content,
-            created_at,
-            created_at
-        ]
-    )
+    con.execute("""
+        INSERT INTO recipes (creator_id, title, content, type_id, created_at, edited_at)
+        VALUES (?, ?, ?, ?, ?, ?) """,
+        [user["id"], title, content, type_id, created_at, created_at])
 
 con.commit()
 con.close()

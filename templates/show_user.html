@@ -4,12 +4,11 @@
 {% block content %}
 <h1>Reseptikokoelma</h1>
 
-<h2>{{ user.username }}</h2>
-<p><a href="/">Etusivu</a></p>
+<h2>{{ user }}</h2>
 
-<h2>Käyttäjän reseptit</h2>
+<h3>Käyttäjän reseptit</h3>
 <p>Reseptejä yhteensä: {{ recipe_count }}</p>
-
+<p>Käyttäjien arviointeja {{ rate_count }}, keskiarvo {{ rate_average }}</p>
 {% if recipes %}
   {% for recipe in recipes %}
     <div>
