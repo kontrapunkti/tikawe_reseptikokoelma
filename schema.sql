@@ -9,19 +9,25 @@ CREATE TABLE IF NOT EXISTS recipes(
     creator_id INTEGER REFERENCES users,
     title TEXT,
     content TEXT,
+    type_id INTEGER REFERENCES recipe_types,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     edited_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS categories(
     id INTEGER PRIMARY KEY,
-    name TEXT
+    name TEXT UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS recipe_categories(
     recipe_id INTEGER REFERENCES recipes,
     category_id INTEGER REFERENCES categories,
     PRIMARY KEY (recipe_id, category_id)
+);
+
+CREATE TABLE IF NOT EXISTS recipe_types(
+    id INTEGER PRIMARY KEY,
+    name TEXT UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS ratings(
@@ -32,7 +38,11 @@ CREATE TABLE IF NOT EXISTS ratings(
     UNIQUE(recipe_id, user_id)
 );
 
-INSERT INTO categories(name) VALUES("Gluteeniton");
-INSERT INTO categories(name) VALUES("Laktoositon");
-INSERT INTO categories(name) VALUES("Vähälaktoosinen");
-INSERT INTO categories(name) VALUES("Vegaaninen");
+INSERT OR IGNORE INTO categories(name) VALUES('Gluteeniton');
+INSERT OR IGNORE INTO categories(name) VALUES('Laktoositon');
+INSERT OR IGNORE INTO categories(name) VALUES('Vähälaktoosinen');
+INSERT OR IGNORE INTO categories(name) VALUES('Vegaaninen');
+
+INSERT OR IGNORE INTO recipe_types(name) VALUES('Alkuruoka');
+INSERT OR IGNORE INTO recipe_types(name) VALUES('Pääruoka');
+INSERT OR IGNORE INTO recipe_types(name) VALUES('Jälkiruoka');

@@ -10,9 +10,9 @@ def get_user_recipes(user_id):
 
     return db.query(sql, [user_id])
 
-def create_recipe(creator_id, title, content, categories):
+def create_recipe(creator_id, title, content, categories, recipe_type):
     con = db.connect()
-    cursor = con.execute("INSERT INTO recipes (creator_id, title, content) VALUES (?, ?, ?)", [creator_id, title.title(), content])
+    cursor = con.execute("INSERT INTO recipes (creator_id, title, content, type_id) VALUES (?, ?, ?, ?)", [creator_id, title.title(), content, recipe_type])
     if categories:
         for category_id in categories:
             con.execute("INSERT INTO recipe_categories (recipe_id, category_id) VALUES (?, ?)", [cursor.lastrowid, category_id])
@@ -21,9 +21,10 @@ def create_recipe(creator_id, title, content, categories):
 
 def get_recipe_by_id(recipe_id):
     result = db.query("""
-        SELECT R.id, R.creator_id, R.title, R.content, U.username
+        SELECT R.id, R.creator_id, R.title, R.content, RT.name AS recipe_type,  U.username
         FROM recipes R
         LEFT JOIN users U ON U.id = R.creator_id
+        LEFT JOIN recipe_types RT ON R.type_id = RT.id
         WHERE R.id = ?""", [recipe_id])
 
     if len(result)==0:
@@ -33,7 +34,7 @@ def get_recipe_by_id(recipe_id):
 
 def get_recipe_for_edit(user_id, recipe_id):
     result = db.query("""
-            SELECT id, title, content
+            SELECT id, title, content, type_id
             FROM recipes
             WHERE creator_id = ?
             AND id = ?""", [user_id, recipe_id])
@@ -43,7 +44,7 @@ def get_recipe_for_edit(user_id, recipe_id):
 
     return result[0]
 
-def edit_recipe(user_id, recipe_id, title, content, categories):
+def edit_recipe(user_id, recipe_id, title, content, categories, recipe_type):
     result = db.query("""
             SELECT id
             FROM recipes
@@ -55,10 +56,10 @@ def edit_recipe(user_id, recipe_id, title, content, categories):
 
     con = db.connect()
     sql = """
-    UPDATE recipes
-    SET title = ?, content = ?, edited_at = CURRENT_TIMESTAMP
-    WHERE id = ?"""
-    con.execute(sql, [title.title(), content, recipe_id])
+        UPDATE recipes
+        SET title = ?, content = ?, edited_at = CURRENT_TIMESTAMP, type_id = ?
+        WHERE id = ?"""
+    con.execute(sql, [title.title(), content, recipe_type, recipe_id])
     con.execute("DELETE FROM recipe_categories WHERE recipe_id = ?", [recipe_id])
     for category_id in categories:
         con.execute("INSERT INTO recipe_categories (recipe_id, category_id) VALUES (?, ?)", [recipe_id, category_id])

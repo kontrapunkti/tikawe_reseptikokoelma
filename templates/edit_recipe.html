@@ -16,6 +16,7 @@
         Resepti:<br>
         <textarea name="content" rows="5" cols="40" maxlength="10000" required>{{ recipe.content }}</textarea>
     </p>
+    <div>
     <p>
         Kategoriat:
     </p>
@@ -27,6 +28,18 @@
         <label>Vähälaktoosinen</label><br>
         <input type="checkbox" name="categories" value="4" {% if 4 in categories %} checked {% endif %}>
         <label>Vegaaninen</label><br>
+    </div>
+    <div>
+        <p>
+        Luokka:
+        </p>
+        <input type="radio" name="recipe_type" value="1" {% if recipe.type_id == 1 %} checked {% endif %} required>
+        <label>Alkuruoka</label>
+        <input type="radio" name="recipe_type" value="2" {% if recipe.type_id == 2 %} checked {% endif %}>
+        <label>Pääruoka</label>
+        <input type="radio" name="recipe_type" value="3" {% if recipe.type_id == 3 %} checked {% endif %}>
+        <label>Jälkiruoka</label>
+    </div>
         <input type="submit" value="Tallenna muutokset">
 
 </form>

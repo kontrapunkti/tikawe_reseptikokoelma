@@ -6,6 +6,8 @@
 <h3>Käyttäjien arviointeja {{ rate_count }}, keskiarvo {{ rate_average }}</h3>
 <p>{{ recipe.content }}</p>
 {% if categories %}
+<h2>Ruokalajin tyyppi</h2>
+<p> {{ recipe.recipe_type }}</p>
 <h2>Luokittelut</h2>
 <ul>
     {% for category in categories %}

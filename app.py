@@ -95,6 +95,7 @@ def create_recipe():
     title = request.form["title"].strip()
     content = request.form["content"].strip()
     categories = request.form.getlist("categories")
+    recipe_type = request.form["recipe_type"]
     if not title:
         return render_template("error.html", error = "Otsikko ei voi olla tyhjä")
     if not content:
@@ -103,7 +104,7 @@ def create_recipe():
         return render_template("error.html", error = "Liian pitkä otsikko")
     if len(content)>10000:
         return render_template("error.html", error = "Liian pitkä resepti")
-    recipes.create_recipe(session["user_id"], title, content, categories)
+    recipes.create_recipe(session["user_id"], title, content, categories, recipe_type)
 
     return redirect("/user")
 
@@ -143,6 +144,7 @@ def update_recipe(recipe_id):
     categories = request.form.getlist("categories")
     title = request.form["title"].strip()
     content = request.form["content"].strip()
+    recipe_type = request.form["recipe_type"]
     if not title:
         return render_template("error.html", error = "Otsikko ei voi olla tyhjä")
     if not content:
@@ -151,7 +153,7 @@ def update_recipe(recipe_id):
         return render_template("error.html", error = "Liian pitkä otsikko")
     if len(content)>10000:
         return render_template("error.html", error = "Liian pitkä resepti")
-    if not recipes.edit_recipe(session["user_id"], recipe_id, title, content, categories):
+    if not recipes.edit_recipe(session["user_id"], recipe_id, title, content, categories, recipe_type):
         return render_template("error.html", error = "Sinulla ei ole oikeutta muokata tätä reseptiä.")
 
     return redirect("/user")

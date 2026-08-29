@@ -13,17 +13,30 @@
     Resepti:<br />
     <textarea name="content" rows="5" cols="40" maxlength="10000" required></textarea>
   </p>
-  <p>
-    Kategoriat:
-  </p>
-    <input type="checkbox" name="categories" value="1">
-    <label>Gluteeniton</label><br>
-    <input type="checkbox" name="categories" value="2">
-    <label>Laktoositon</label><br>
-    <input type="checkbox" name="categories" value="3">
-    <label>Vähälaktoosinen</label><br>
-    <input type="checkbox" name="categories" value="4">
-    <label>Vegaaninen</label><br>
-    <input type="submit" value="Tallenna resepti" />
+  <div>
+    <p>
+      Kategoriat:
+    </p>
+      <input type="checkbox" name="categories" value="1">
+      <label>Gluteeniton</label><br>
+      <input type="checkbox" name="categories" value="2">
+      <label>Laktoositon</label><br>
+      <input type="checkbox" name="categories" value="3">
+      <label>Vähälaktoosinen</label><br>
+      <input type="checkbox" name="categories" value="4">
+      <label>Vegaaninen</label><br>
+  </div>
+  <div>
+    <p>
+      Luokka:
+    </p>
+      <input type="radio" name="recipe_type" value="1" required>
+      <label>Alkuruoka</label>
+      <input type="radio" name="recipe_type" value="2">
+      <label>Pääruoka</label>
+      <input type="radio" name="recipe_type" value="3">
+      <label>Jälkiruoka</label>
+  </div>
+  <input type="submit" value="Tallenna resepti" />
 </form>
 {% endblock %}
