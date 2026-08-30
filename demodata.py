@@ -10,18 +10,8 @@ con.execute("DELETE FROM recipe_categories")
 con.execute("DELETE FROM recipes")
 con.execute("DELETE FROM users")
 
-usernames = [
-    "kalle",
-    "maija",
-    "pekka",
-    "matti",
-    "liisa",
-    "anna",
-    "jari",
-    "minna",
-    "teemu",
-    "sara"
-]
+usernames = ["kalle", "maija", "pekka", "matti", "liisa",
+             "anna", "jari", "minna", "teemu", "sara"]
 
 for username in usernames:
     try:

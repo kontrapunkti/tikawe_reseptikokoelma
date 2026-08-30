@@ -86,7 +86,7 @@ def user_page():
     user_recipes = recipes.get_user_recipes(user_id)
     return render_template("user.html",username=username,
                            recipes=user_recipes,recipe_count=len(user_recipes),
-                           rate_count= rate_count, rate_average=rate_average)
+                           rate_count=rate_count, rate_average=rate_average)
 
 @app.route("/new_recipe")
 def new_recipe():
@@ -141,10 +141,10 @@ def show_recipe(recipe_id):
         if rate_available:
             rate = ratings.get_rating_by_user_id_and_recipe_id(session["user_id"],
                                                                recipe_id)
-    return render_template("recipe.html", recipe=recipe, categories = categories,
-                           editable = editable, rate_available = rate_available,
-                           rate_count = rate_count, rate_average = rate_average,
-                           rate = rate)
+    return render_template("recipe.html", recipe=recipe, categories=categories,
+                           editable=editable, rate_available=rate_available,
+                           rate_count=rate_count, rate_average=rate_average,
+                           rate=rate)
 
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):
@@ -153,7 +153,7 @@ def edit_recipe(recipe_id):
     recipe = recipes.get_recipe_for_edit(session["user_id"], recipe_id)
     categories = recipes.get_categoryids_by_recipe_id(recipe_id)
     if not recipe:
-        return render_template("error.html", error = "Ei käyttöoikeutta tähän reseptiin")
+        return render_template("error.html", error="Ei käyttöoikeutta tähän reseptiin")
     return render_template("edit_recipe.html",recipe=recipe, categories=categories)
 
 @app.route("/update_recipe/<int:recipe_id>", methods=["POST"])
@@ -176,9 +176,9 @@ def update_recipe(recipe_id):
     if len(content)>10000:
         errors.append("Liian pitkä resepti")
     if errors:
-        return render_template("error.html", errors = errors)
+        return render_template("error.html", errors=errors)
     if not recipes.edit_recipe( session["user_id"],
-                               recipe_id, title, content, categories, recipe_type ):
+                               recipe_id, title, content, categories, recipe_type):
         return render_template( "error.html",
                                error="Sinulla ei ole oikeutta muokata tätä reseptiä.")
     return redirect(f"/recipe/{recipe_id}")
@@ -191,7 +191,7 @@ def delete_recipe(recipe_id):
         return render_template("error.html",error="Virheellinen pyyntö")
     if not recipes.delete_recipe(session["user_id"], recipe_id):
         return render_template("error.html",
-                               error = "Sinulla ei ole oikeutta poistaa tätä reseptiä.")
+                               error="Sinulla ei ole oikeutta poistaa tätä reseptiä.")
     return redirect("/user")
 
 @app.route("/show_user/<int:user_id>")
@@ -202,14 +202,14 @@ def show_user(user_id):
     rate_average = ratings.average_by_user_id(user_id)
     rate_average = round(rate_average, 2)
     if not user:
-        return render_template("Error.html", error = "Käyttäjää ei löytynyt")
+        return render_template("Error.html", error="Käyttäjää ei löytynyt")
     return render_template(
         "show_user.html",
         recipes=user_recipes,
         user=user,
-        recipe_count = len(user_recipes),
-        rate_count = rate_count,
-        rate_average = rate_average)
+        recipe_count=len(user_recipes),
+        rate_count=rate_count,
+        rate_average=rate_average)
 
 @app.route("/search")
 def search():
@@ -233,4 +233,4 @@ def rate_recipe():
     rate = int(request.form["rate"])
     if ratings.rate_recipe(recipe_id, session["user_id"], rate):
         return redirect(f"/recipe/{recipe_id}")
-    return render_template("error.html", error = "Virheellinen arvio")
+    return render_template("error.html", error="Virheellinen arvio")
