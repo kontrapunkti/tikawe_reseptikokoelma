@@ -1,12 +1,10 @@
 {% extends "layout.html" %}
-
 {% block title %}Reseptikokoelma{% endblock %}
-
 {% block content %}
 <h1>Etsi reseptejä</h1>
 <p><a href="/">Etusivu</a></p>
-  <form action="/search" method="post">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<form action="/search" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     Hakusana: <br />
     <input type="text" name="query" />
@@ -15,14 +13,11 @@
 </form>
 <p>Etsi reseptejä otsikolla</p>
 <h2>Hakutulokset</h2>
-{% if recipes %}
-  {% for recipe in recipes %}
-    <div>
-      <h3>{{ recipe.title }}</h3>
+{% if recipes %} {% for recipe in recipes %}
+<div>
+  <h3>{{ recipe.title }}</h3>
 
-    <a href="/recipe/{{ recipe.id }}">Avaa</a>
-    </div>
-    <hr>
-  {% endfor %}
-{% endif %}
-{% endblock %}
+  <a href="/recipe/{{ recipe.id }}">Avaa</a>
+</div>
+<hr />
+{% endfor %} {% endif %} {% endblock %}

@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
-
 {% block title %}Reseptikokoelma{% endblock %}
-
 {% block content %}
 
 <p>Tervetuloa reseptikokoelmasovellukseen! Voit mm.</p>
@@ -12,14 +10,10 @@
   <li>antaa reseptille arvosanoja</li>
 </ul>
 
-{% if recipes %}
-  {% for recipe in recipes %}
-    <div>
-      <h3>{{ recipe.title }}</h3>
-      <p>Luotu {{ recipe.created_at }}</p>
-      <a href="/recipe/{{ recipe.id }}">Avaa</a>
-    </div>
-  {% endfor %}
-{% endif %}
-
-{% endblock %}
+{% if recipes %} {% for recipe in recipes %}
+<div>
+  <h3>{{ recipe.title }}</h3>
+  <p>Luotu {{ recipe.created_at }}</p>
+  <a href="/recipe/{{ recipe.id }}">Avaa</a>
+</div>
+{% endfor %} {% endif %} {% endblock %}

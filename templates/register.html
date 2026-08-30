@@ -1,25 +1,23 @@
 {% extends "layout.html" %}
-
 {% block title %}Luo uusi tunnus{% endblock %}
-
 {% block content %}
 <form action="/create" method="post">
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <p>
     Käyttäjätunnus: <br />
-    <input type="text" name="username" maxlength="50" required/>
+    <input type="text" name="username" maxlength="50" required />
   </p>
   <p>
     Salasana: <br />
-    <input type="password" name="password1" maxlength="50" required/>
+    <input type="password" name="password1" maxlength="50" required />
   </p>
   <p>
     Salasana uudestaan: <br />
-    <input type="password" name="password2" maxlength="50" required/>
+    <input type="password" name="password2" maxlength="50" required />
   </p>
   <input type="submit" value="Luo uusi tunnus" />
 </form>
-    {% if error %}
-    <p style="color: red;">{{ error }}</p>
-    {% endif %}
+{% if error %}
+<p style="color: red">{{ error }}</p>
+{% endif %}
 {% endblock %}

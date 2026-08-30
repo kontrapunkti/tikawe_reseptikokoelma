@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
-
-{% block title %}Reseptikokoelma{% endblock %}
-
+{% block title %}
+Reseptikokoelma
+{% endblock %}
 {% block content %}
 <h1>Muokkaa reseptiä</h1>
 
@@ -17,9 +17,7 @@
         <textarea name="content" rows="5" cols="40" maxlength="10000" required>{{ recipe.content }}</textarea>
     </p>
     <div>
-    <p>
-        Kategoriat:
-    </p>
+        <p>Kategoriat:</p>
         <input type="checkbox" name="categories" value="1" {% if 1 in categories %} checked {% endif %}>
         <label>Gluteeniton</label><br>
         <input type="checkbox" name="categories" value="2" {% if 2 in categories %} checked {% endif %}>
@@ -30,17 +28,14 @@
         <label>Vegaaninen</label><br>
     </div>
     <div>
-        <p>
-        Luokka:
-        </p>
-        <input type="radio" name="recipe_type" value="1" {% if recipe.type_id == 1 %} checked {% endif %} required>
+        <p>Luokka:</p>
+        <input type="radio" name="recipe_type" value="1" {% if recipe.type_id==1 %} checked {% endif %} required>
         <label>Alkuruoka</label>
-        <input type="radio" name="recipe_type" value="2" {% if recipe.type_id == 2 %} checked {% endif %}>
+        <input type="radio" name="recipe_type" value="2" {% if recipe.type_id==2 %} checked {% endif %}>
         <label>Pääruoka</label>
-        <input type="radio" name="recipe_type" value="3" {% if recipe.type_id == 3 %} checked {% endif %}>
+        <input type="radio" name="recipe_type" value="3" {% if recipe.type_id==3 %} checked {% endif %}>
         <label>Jälkiruoka</label>
     </div>
-        <input type="submit" value="Tallenna muutokset">
-
+    <input type="submit" value="Tallenna muutokset">
 </form>
 {% endblock %}
